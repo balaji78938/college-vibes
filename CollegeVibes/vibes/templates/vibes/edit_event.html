@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Event</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Your existing styles remain unchanged */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #6DD5ED);
+            min-height: 100vh;
+            margin: 0;
+            padding: 30px;
+            overflow-y: auto;
+            font-size: 16px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+            animation: pulse 10s infinite;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.2); opacity: 0.4; }
+            100% { transform: scale(1); opacity: 0.2; }
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.97);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(12px);
+            animation: fadeIn 0.5s ease-in-out;
+            position: relative;
+            transform: scale(0.95);
+            transform-origin: top center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(0.95); }
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #e67e22, #f1c40f);
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, #d35400, #f39c12);
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 6px 15px rgba(230, 126, 34, 0.4);
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        input[type="datetime-local"],
+        input[type="number"],
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            background: #f9f9f9;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #1e3c72;
+            box-shadow: 0 0 8px rgba(30, 60, 114, 0.3);
+            background: #fff;
+            outline: none;
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .image-preview {
+            display: block;
+            margin: 15px auto;
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            border: none;
+            background: linear-gradient(135deg, #9b59b6, #e74c3c);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #8e44ad, #c0392b);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+        }
+
+        .group-event-fields, .price-qr-fields {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(245, 245, 245, 0.95);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid #e0e0e0;
+        }
+
+        .group-event-fields.active, .price-qr-fields.active {
+            display: block;
+        }
+
+        .group-event-fields input[type="number"],
+        .price-qr-fields input[type="number"] {
+            width: 100%;
+            max-width: 220px;
+            padding: 10px;
+            font-size: 1.1rem;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            background: rgba(231, 76, 60, 0.1);
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 576px) {
+            .form-container {
+                max-width: 100%;
+                padding: 20px;
+                margin: 15px auto;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            label, .checkbox-group label {
+                font-size: 1rem;
+            }
+            input, textarea {
+                padding: 10px;
+                font-size: 1rem;
+            }
+            button {
+                padding: 12px;
+                font-size: 1.1rem;
+            }
+            .back-btn {
+                padding: 6px 12px;
+                font-size: 1rem;
+            }
+            .image-preview {
+                max-width: 160px;
+            }
+            .group-event-fields input[type="number"],
+            .price-qr-fields input[type="number"] {
+                max-width: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'manage_events' %}" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+
+    <div class="form-container">
+        <h1>Edit Event</h1>
+        
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+        {% if form.errors %}
+            <div class="error-message">
+                <ul>
+                    {% for field, errors in form.errors.items %}
+                        <li>{{ field }}: {{ errors|join:", " }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <form action="{% url 'edit_event' event.id %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="event_name"><i class="fas fa-calendar-alt"></i> Event Name</label>
+                <input type="text" id="event_name" name="name" value="{{ form.name.value|default:event.name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="event_date"><i class="fas fa-calendar-day"></i> Event Date</label>
+                <input type="date" id="event_date" name="date" value="{{ form.date.value|default:event.date|date:'Y-m-d' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="event_time"><i class="fas fa-clock"></i> Event Time</label>
+                <input type="time" id="event_time" name="time" value="{{ form.time.value|default:event.time|time:'H:i' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="event_venue"><i class="fas fa-map-marker-alt"></i> Venue</label>
+                <input type="text" id="event_venue" name="venue" value="{{ form.venue.value|default:event.venue }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="registration_deadline"><i class="fas fa-hourglass-end"></i> Registration Deadline</label>
+                <input type="datetime-local" id="registration_deadline" name="registration_deadline" value="{{ form.registration_deadline.value|default:event.registration_deadline|date:'Y-m-d\\TH:i' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="event_description"><i class="fas fa-align-left"></i> Event Description</label>
+                <textarea id="event_description" name="description" required>{{ form.description.value|default:event.description }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-image"></i> Current Poster:</label>
+                {% if event.poster and event.poster.url %}
+                    <img id="current-poster" src="{{ event.poster.url }}" alt="Event Poster" class="image-preview">
+                {% else %}
+                    <p>No poster uploaded</p>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="event_poster"><i class="fas fa-image"></i> Upload New Poster (optional):</label>
+                <input type="file" id="event_poster" name="poster" accept="image/*">
+                <img id="new-poster-preview" src="#" alt="New Poster Preview" class="image-preview" style="display: none;">
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="has_price" name="has_price" {% if form.has_price.value|default:event.price %}checked{% endif %}>
+                <label for="has_price">Does this event have a price?</label>
+            </div>
+
+            <div id="price-qr-fields" class="price-qr-fields {% if form.has_price.value|default:event.price %}active{% endif %}">
+                <div class="form-group">
+                    <label for="price"><i class="fas fa-rupee-sign"></i> Price (in INR)</label>
+                    <input type="number" id="price" name="price" value="{{ form.price.value|default:event.price }}" step="0.01" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-qrcode"></i> Current QR Code:</label>
+                    {% if event.qr_code and event.qr_code.url %}
+                        <img id="current-qr-code" src="{{ event.qr_code.url }}" alt="QR Code" class="image-preview">
+                    {% else %}
+                        <p>No QR code uploaded</p>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="qr_code"><i class="fas fa-qrcode"></i> Upload New QR Code (optional):</label>
+                    <input type="file" id="qr_code" name="qr_code" accept="image/*">
+                    <img id="new-qr-code-preview" src="#" alt="New QR Code Preview" class="image-preview" style="display: none;">
+                </div>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="is_group_event" name="is_group_event" {% if form.is_group_event.value|default:event.is_group_event %}checked{% endif %}>
+                <label for="is_group_event">Group Event</label>
+            </div>
+
+            <div id="group-event-fields" class="group-event-fields {% if form.is_group_event.value|default:event.is_group_event %}active{% endif %}">
+                <div class="form-group">
+                    <label for="min_members"><i class="fas fa-users"></i> Minimum Members</label>
+                    <input type="number" id="min_members" name="min_members" value="{{ form.min_members.value|default:event.min_members }}" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="max_members"><i class="fas fa-users"></i> Maximum Members</label>
+                    <input type="number" id="max_members" name="max_members" value="{{ form.max_members.value|default:event.max_members }}" min="1">
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="same_branch_required" name="same_branch_required" {% if form.same_branch_required.value|default:event.same_branch_required %}checked{% endif %}>
+                    <label for="same_branch_required">Same Branch Required</label>
+                </div>
+            </div>
+
+            <!-- Added Is Completed Checkbox -->
+            <div class="checkbox-group">
+                <input type="checkbox" id="is_completed" name="is_completed" {% if form.is_completed.value|default:event.is_completed %}checked{% endif %}>
+                <label for="is_completed"><i class="fas fa-check-circle"></i> Is Completed</label>
+            </div>
+
+            <button type="submit">Update Event</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const isGroupEventCheckbox = document.getElementById('is_group_event');
+            const groupEventFields = document.getElementById('group-event-fields');
+            const hasPriceCheckbox = document.getElementById('has_price');
+            const priceQrFields = document.getElementById('price-qr-fields');
+            const posterInput = document.getElementById('event_poster');
+            const newPosterPreview = document.getElementById('new-poster-preview');
+            const qrCodeInput = document.getElementById('qr_code');
+            const newQrCodePreview = document.getElementById('new-qr-code-preview');
+
+            // Toggle group event fields
+            isGroupEventCheckbox.addEventListener('change', function() {
+                groupEventFields.classList.toggle('active', this.checked);
+            });
+
+            // Toggle price/QR fields
+            hasPriceCheckbox.addEventListener('change', function() {
+                priceQrFields.classList.toggle('active', this.checked);
+            });
+
+            // Poster preview
+            posterInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    newPosterPreview.src = URL.createObjectURL(file);
+                    newPosterPreview.style.display = 'block';
+                }
+            });
+
+            // QR code preview
+            qrCodeInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    newQrCodePreview.src = URL.createObjectURL(file);
+                    newQrCodePreview.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

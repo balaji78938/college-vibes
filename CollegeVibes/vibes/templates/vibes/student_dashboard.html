@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - College Vibes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f3e8ff, #d1fae5);
+            color: #1f2937;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            color: #ffffff;
+            padding: 20px 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .welcome-message {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .welcome-message .name {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-bar .nav-link {
+            color: #ffffff;
+            font-weight: 600;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-bar .nav-link:hover,
+        .menu-bar .nav-link.active {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        h3 {
+            color: #1f2937;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .event-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 20px 0;
+            position: relative;
+        }
+
+        .event-card {
+            width: calc(33.33% - 20px);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            background: #ffffff;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .event-card img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            display: block;
+        }
+
+        .event-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .event-card:nth-child(3n+1) { top: 0; }
+        .event-card:nth-child(3n+2) { top: 180px; }
+        .event-card:nth-child(3n+3) { top: 0; }
+
+        .event-details-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(243, 232, 255, 0.95);
+            backdrop-filter: blur(10px);
+            color: #1f2937;
+            width: 85%;
+            max-width: 1100px;
+            padding: 25px;
+            border-radius: 20px;
+            transition: opacity 0.4s ease;
+            z-index: 1001;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            opacity: 0;
+            pointer-events: none;
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+        }
+
+        .event-details-panel.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .event-poster {
+            width: 40%;
+            max-width: 350px;
+            height: auto;
+            border-radius: 15px;
+            object-fit: cover;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .event-poster:hover {
+            transform: scale(1.02);
+        }
+
+        .event-details-content {
+            flex: 1;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .event-details-content h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #2d3748;
+            text-transform: uppercase;
+            border-bottom: 2px solid #8b5cf6;
+            padding-bottom: 5px;
+        }
+
+        .event-meta {
+            margin-bottom: 20px;
+        }
+
+        .event-meta p {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .event-meta p i {
+            color: #8b5cf6;
+            font-size: 0.9rem;
+        }
+
+        .event-description {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin: 15px 0;
+            color: #718096;
+            border-left: 4px solid #d1fae5;
+            padding-left: 15px;
+        }
+
+        .event-additional {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #e2e8f0;
+        }
+
+        .event-additional p {
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            color: #4a5568;
+        }
+
+        .qr-code {
+            width: 100%;
+            max-width: 180px;
+            border-radius: 10px;
+            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .qr-code:hover {
+            transform: scale(1.05);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .utr-input, .transaction-date, .transaction-time {
+            font-size: 0.95rem;
+            color: #4a5568;
+            font-weight: 500;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+            background: #ffffff;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 300px;
+            margin-top: 5px;
+            letter-spacing: 1px;
+            font-family: monospace;
+            transition: border-color 0.3s ease;
+        }
+
+        .utr-input:focus, .transaction-date:focus, .transaction-time:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 5px rgba(139, 92, 246, 0.3);
+        }
+
+        .input-label {
+            font-size: 0.9rem;
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-custom {
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background: #8b5cf6;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-danger {
+            background: #e11d48;
+            color: #ffffff;
+        }
+
+        .btn-danger:hover {
+            background: #be123c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .registered-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #10b981;
+            background: #d1fae5;
+            padding: 8px 15px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .registered-label.pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .registered-label i {
+            font-size: 0.9rem;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            pointer-events: auto;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 28px;
+            color: #2d3748;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .close-btn:hover {
+            color: #e11d48;
+            transform: scale(1.1);
+            background: #f7fafc;
+        }
+
+        /* Toggle Menu Styles */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+        }
+
+        .menu-bar {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Media Queries */
+        @media (max-width: 1024px) {
+            .event-card { width: calc(50% - 15px); }
+            .event-card:nth-child(2n+2) { top: 180px; }
+            .event-card:nth-child(2n+1) { top: 0; }
+            .event-details-panel { width: 90%; padding: 20px; gap: 20px; }
+            .event-poster { width: 35%; max-width: 300px; }
+            .event-details-content { padding: 15px; }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .container-fluid {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .welcome-container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            .welcome-message .name {
+                font-size: 1.6rem;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .menu-bar {
+                display: none;
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .menu-bar.active {
+                display: block;
+            }
+
+            .menu-bar .nav {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .menu-bar .nav-link {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+                justify-content: flex-start;
+            }
+
+            .event-card { width: calc(50% - 15px); }
+            .event-details-panel { 
+                flex-direction: column; 
+                width: 95%; 
+                padding: 15px; 
+                gap: 15px;
+            }
+            .event-poster { width: 100%; max-width: 300px; margin: 0 auto; }
+            .event-details-content h3 { font-size: 1.7rem; }
+            .event-meta p { font-size: 0.9rem; }
+            .event-description { font-size: 0.85rem; }
+            .action-btns { flex-direction: column; gap: 10px; }
+            .btn-custom { width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            .header { padding: 10px 15px; }
+            .welcome-message .name { font-size: 1.4rem; }
+            h3 { font-size: 2rem; }
+            .menu-bar .nav-link { padding: 6px 10px; font-size: 0.8rem; }
+            .hamburger { font-size: 1.2rem; }
+            .event-card { width: 100%; top: 0 !important; }
+            .event-meta p { font-size: 0.85rem; }
+            .event-description { font-size: 0.8rem; }
+            .event-poster { max-width: 250px; }
+            .event-details-panel { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <div class="welcome-container">
+                <div class="welcome-message">
+                    <span class="name">Welcome, {{ student.name }}</span>
+                </div>
+                <button class="hamburger" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <nav class="menu-bar">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'student_dashboard' %}">
+                            <i class="fas fa-calendar-alt"></i> Explore Events
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'registered_events' %}">
+                            <i class="fas fa-check-circle"></i> Registered Events
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'notifications' %}">
+                            <i class="fas fa-bell"></i> Notifications
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'myprofile' %}">
+                            <i class="fas fa-user"></i> My Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h3>Upcoming & Ongoing Events</h3>
+        <div class="event-list">
+            {% for event in events %}
+            <div class="event-card" 
+                 data-id="{{ event.id }}"
+                 data-name="{{ event.name }}"
+                 data-date="{{ event.date }}"
+                 data-time="{{ event.time|time:'h:i A' }}"
+                 data-venue="{{ event.venue }}"
+                 data-description="{{ event.description }}"
+                 data-poster="{% if event.poster %}{{ event.poster.url }}{% else %}''{% endif %}"
+                 data-club="{{ event.club.name }}"
+                 data-is-group="{% if event.is_group_event %}true{% else %}false{% endif %}"
+                 data-min-members="{% if event.min_members %}{{ event.min_members }}{% else %}null{% endif %}"
+                 data-max-members="{% if event.max_members %}{{ event.max_members }}{% else %}null{% endif %}"
+                 data-same-branch="{% if event.same_branch_required %}true{% else %}false{% endif %}"
+                 data-registered="{% if event.is_registered %}true{% else %}false{% endif %}"
+                 data-payment-verified="{% if event.payment_verified %}true{% else %}false{% endif %}"
+                 data-is-paid="{% if event.is_paid %}true{% else %}false{% endif %}"
+                 data-group-url="{% url 'group_registration' event.id %}"
+                 data-register-url="{% url 'register_event' event.id %}"
+                 data-unregister-url="{% url 'unregister_event' event.id %}"
+                 data-price="{% if event.price %}{{ event.price }}{% else %}0{% endif %}"
+                 data-qr-code="{% if event.qr_code %}{{ event.qr_code.url }}{% else %}''{% endif %}">
+                <img loading="lazy" src="{{ event.poster.url|default:'/static/images/default_poster.jpg' }}" alt="{{ event.name }}">
+            </div>
+            {% empty %}
+            <p>No events available.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="event-details-panel">
+        <span class="close-btn">×</span>
+        <img src="" alt="Event Poster" class="event-poster">
+        <div class="event-details-content"></div>
+    </div>
+
+    <div class="overlay"></div>
+
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Toggle Menu Functionality
+            const hamburger = document.querySelector('.hamburger');
+            const menuBar = document.querySelector('.menu-bar');
+
+            hamburger.addEventListener('click', () => {
+                menuBar.classList.toggle('active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!hamburger.contains(e.target) && !menuBar.contains(e.target)) {
+                    menuBar.classList.remove('active');
+                }
+            });
+
+            // Existing Event Card Functionality
+            const eventCards = document.querySelectorAll('.event-card');
+            const detailsPanel = document.querySelector('.event-details-panel');
+            const overlay = document.querySelector('.overlay');
+            const closeBtn = document.querySelector('.close-btn');
+            const eventPoster = document.querySelector('.event-poster');
+
+            eventCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    overlay.style.display = 'block';
+                    detailsPanel.classList.add('active');
+
+                    const eventData = {
+                        id: card.dataset.id,
+                        name: card.dataset.name,
+                        date: card.dataset.date,
+                        time: card.dataset.time,
+                        venue: card.dataset.venue,
+                        description: card.dataset.description,
+                        posterUrl: card.dataset.poster || '/static/images/default_poster.jpg',
+                        club: card.dataset.club,
+                        isGroup: card.dataset.isGroup === 'true',
+                        minMembers: card.dataset.minMembers === 'null' ? null : Number(card.dataset.minMembers),
+                        maxMembers: card.dataset.maxMembers === 'null' ? null : Number(card.dataset.maxMembers),
+                        sameBranch: card.dataset.sameBranch === 'true',
+                        isRegistered: card.dataset.registered === 'true',
+                        paymentVerified: card.dataset.paymentVerified === 'true',
+                        isPaid: card.dataset.isPaid === 'true',
+                        groupUrl: card.dataset.groupUrl,
+                        registerUrl: card.dataset.registerUrl,
+                        unregisterUrl: card.dataset.unregisterUrl,
+                        price: Number(card.dataset.price),
+                        qrCode: card.dataset.qrCode
+                    };
+
+                    eventPoster.src = eventData.posterUrl;
+
+                    const groupDetails = eventData.isGroup ? `
+                        <div class="event-meta">
+                            <p><i class="fas fa-users"></i><strong>Group Size:</strong> ${eventData.minMembers || 'N/A'} - ${eventData.maxMembers || 'N/A'} members</p>
+                            <p><i class="fas fa-graduation-cap"></i><strong>Branch Restriction:</strong> ${eventData.sameBranch ? 'Same branch required' : 'Any branch allowed'}</p>
+                        </div>
+                    ` : '';
+
+                    const priceDetails = eventData.price > 0 ? `
+                        <div class="event-meta">
+                            <p><i class="fas fa-rupee-sign"></i><strong>Price:</strong> ₹${eventData.price}</p>
+                        </div>
+                    ` : '';
+
+                    const qrCodeSection = (!eventData.isGroup && eventData.price > 0 && eventData.qrCode) ? `
+                        <div class="event-additional">
+                            <p><strong>QR Code for Payment:</strong></p>
+                            <img src="${eventData.qrCode}" alt="Event QR Code" class="qr-code">
+                        </div>
+                    ` : '';
+
+                    const utrInputSection = (!eventData.isGroup && eventData.price > 0 && !eventData.isRegistered) ? `
+                        <div class="event-additional">
+                            <div class="input-group">
+                                <span class="input-label">UTR Number</span>
+                                <input type="text" class="utr-input" id="utrInput-${eventData.id}" placeholder="Enter UTR Number (12 digits)" maxlength="12">
+                            </div>
+                            <div class="input-group">
+                                <span class="input-label">Transaction Date</span>
+                                <input type="date" class="transaction-date" id="transactionDate-${eventData.id}">
+                            </div>
+                            <div class="input-group">
+                                <span class="input-label">Transaction Time</span>
+                                <input type="time" class="transaction-time" id="transactionTime-${eventData.id}">
+                            </div>
+                        </div>
+                    ` : '';
+
+                    const registerButton = (!eventData.isGroup && !eventData.isRegistered) ? `
+                        <button class="btn-custom btn-primary" id="registerBtn-${eventData.id}" 
+                                onclick="registerEvent('${eventData.registerUrl}', '${eventData.id}', ${eventData.price > 0})"
+                                ${eventData.price > 0 ? 'disabled' : ''}>
+                            Register Now
+                        </button>
+                    ` : '';
+
+                    const registrationStatus = eventData.isRegistered ? 
+                        (eventData.isPaid && !eventData.paymentVerified ? 
+                            `<span class="registered-label pending"><i class="fas fa-hourglass-half"></i> Payment Verification Pending</span>` :
+                            `<span class="registered-label"><i class="fas fa-check"></i> Registered</span>`) : 
+                        (eventData.isGroup ? `<a href="${eventData.groupUrl}" class="btn-custom btn-primary">Register Group</a>` : registerButton);
+
+                    const detailsContent = `
+                        <h3>${eventData.name}</h3>
+                        <div class="event-meta">
+                            <p><i class="fas fa-calendar-day"></i><strong>Date:</strong> ${eventData.date}</p>
+                            <p><i class="fas fa-clock"></i><strong>Time:</strong> ${eventData.time}</p>
+                            <p><i class="fas fa-map-marker-alt"></i><strong>Venue:</strong> ${eventData.venue}</p>
+                            <p><i class="fas fa-users"></i><strong>Organized by:</strong> ${eventData.club}</p>
+                            <p><i class="fas fa-user"></i><strong>Type:</strong> ${eventData.isGroup ? 'Group Event' : 'Individual Event'}</p>
+                            ${priceDetails}
+                            ${groupDetails}
+                        </div>
+                        <div class="event-description">
+                            <p>${eventData.description}</p>
+                        </div>
+                        ${qrCodeSection}
+                        ${utrInputSection}
+                        <div class="action-btns" id="actionBtns-${eventData.id}">
+                            ${registrationStatus}
+                        </div>
+                    `;
+
+                    document.querySelector('.event-details-content').innerHTML = detailsContent;
+
+                    if (!eventData.isGroup && eventData.price > 0 && !eventData.isRegistered) {
+                        const utrInput = document.getElementById(`utrInput-${eventData.id}`);
+                        const transactionDate = document.getElementById(`transactionDate-${eventData.id}`);
+                        const transactionTime = document.getElementById(`transactionTime-${eventData.id}`);
+                        const registerBtn = document.getElementById(`registerBtn-${eventData.id}`);
+
+                        if (utrInput && transactionDate && transactionTime && registerBtn) {
+                            const validateInputs = () => {
+                                const utrValue = utrInput.value.trim();
+                                const dateValue = transactionDate.value;
+                                const timeValue = transactionTime.value;
+                                registerBtn.disabled = !(utrValue.length === 12 && /^\d{12}$/.test(utrValue) && dateValue && timeValue);
+                            };
+
+                            utrInput.addEventListener('input', validateInputs);
+                            transactionDate.addEventListener('change', validateInputs);
+                            transactionTime.addEventListener('change', validateInputs);
+                            validateInputs();
+                        }
+                    }
+                });
+            });
+
+            const closeAll = (e) => {
+                e.stopPropagation();
+                detailsPanel.classList.remove('active');
+                overlay.style.display = 'none';
+            };
+
+            overlay.addEventListener('click', closeAll);
+            closeBtn.addEventListener('click', closeAll);
+
+            window.registerEvent = (registerUrl, eventId, isPaid) => {
+                const formData = new FormData();
+                formData.append('csrfmiddlewaretoken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
+
+                if (isPaid) {
+                    const utrInput = document.getElementById(`utrInput-${eventId}`);
+                    const transactionDate = document.getElementById(`transactionDate-${eventId}`);
+                    const transactionTime = document.getElementById(`transactionTime-${eventId}`);
+
+                    const utr = utrInput.value.trim();
+                    if (utr.length !== 12 || !/^\d{12}$/.test(utr)) {
+                        alert('Please enter a valid 12-digit UTR number.');
+                        return;
+                    }
+                    const date = transactionDate.value;
+                    if (!date) {
+                        alert('Please enter the transaction date.');
+                        return;
+                    }
+                    const time = transactionTime.value;
+                    if (!time) {
+                        alert('Please enter the transaction time.');
+                        return;
+                    }
+
+                    formData.append('utr', utr);
+                    formData.append('transaction_date', date);
+                    formData.append('transaction_time', time);
+                }
+
+                fetch(registerUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.message) {
+                        if (isPaid && data.status === 'pending') {
+                            const now = new Date();
+                            const hours = now.getHours();
+                            const isBefore4PM = hours < 16 || (hours === 16 && now.getMinutes() === 0);
+                            const verificationMessage = isBefore4PM
+                                ? "Payment will be verified by evening 6 or 7 PM."
+                                : "Payment will be verified by morning 9 AM tomorrow.";
+                            alert(`${data.message}\n${verificationMessage}`);
+                        } else {
+                            alert(data.message);
+                        }
+
+                        const actionBtns = document.getElementById(`actionBtns-${eventId}`);
+                        if (data.status === 'pending') {
+                            actionBtns.innerHTML = `
+                                <span class="registered-label pending">
+                                    <i class="fas fa-hourglass-half"></i> Payment Verification Pending
+                                </span>
+                            `;
+                            const card = document.querySelector(`.event-card[data-id="${eventId}"]`);
+                            card.dataset.registered = 'true';
+                            card.dataset.paymentVerified = 'false';
+                        } else if (data.status === 'success') {
+                            actionBtns.innerHTML = `
+                                <span class="registered-label"><i class="fas fa-check"></i> Registered</span>
+                            `;
+                            const card = document.querySelector(`.event-card[data-id="${eventId}"]`);
+                            card.dataset.registered = 'true';
+                            card.dataset.paymentVerified = 'true';
+                        }
+                    } else {
+                        alert(data.error || 'An error occurred.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while registering.');
+                });
+            };
+        });
+    </script>
+</body>
+</html>

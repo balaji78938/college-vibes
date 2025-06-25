@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Notifications - College Vibes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            animation: pulse 10s infinite;
+            z-index: 0;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.2); opacity: 0.4; }
+            100% { transform: scale(1); opacity: 0.2; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+            color: #333;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #1e3c72;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .input-field, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: #ffffff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1), inset 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .input-field:focus, select:focus, textarea:focus {
+            outline: none;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.05);
+            background: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        select option {
+            color: #333;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .error-messages, .warning-messages {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .error-messages {
+            color: #ff4444;
+        }
+
+        .warning-messages {
+            color: #e67e22;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 400px;
+                padding: 1.5rem;
+            }
+            h2 {
+                font-size: 1.6rem;
+            }
+            .input-field, select, textarea, .btn {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 85%;
+                padding: 1.2rem;
+            }
+            h2 {
+                font-size: 1.4rem;
+            }
+            .input-field, select, textarea, .btn {
+                font-size: 0.85rem;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'club_dashboard' %}" class="back-btn">←</a>
+
+    <div class="container">
+        <h2>Send Notifications</h2>
+
+        {% if messages %}
+        <div class="{% if message.tags == 'warning' %}warning-messages{% else %}error-messages{% endif %}">
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="error-messages">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form action="{% url 'send_notifications' %}" method="POST">
+            {% csrf_token %}
+            <select name="event_id" class="input-field" required>
+                <option value="" disabled {% if not selected_event %}selected{% endif %}>Select an Event</option>
+                {% for event in events %}
+                    <option value="{{ event.id }}" {% if selected_event == event.id|stringformat:"s" %}selected{% endif %}>{{ event.name }}</option>
+                {% endfor %}
+            </select>
+            <textarea name="message" class="input-field" placeholder="Enter your message here" required>{{ message|default:'' }}</textarea>
+            <button type="submit" class="btn">Send Notification</button>
+        </form>
+    </div>
+</body>
+</html>

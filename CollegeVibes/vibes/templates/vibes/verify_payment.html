@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Payments</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #6DD5ED);
+            min-height: 100vh;
+            margin: 0;
+            padding: 30px;
+            overflow-y: auto;
+            font-size: 16px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+            animation: pulse 10s infinite;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.2); opacity: 0.4; }
+            100% { transform: scale(1); opacity: 0.2; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.97);
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(12px);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1e3c72;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #e67e22, #f1c40f);
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, #d35400, #f39c12);
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 6px 15px rgba(230, 126, 34, 0.4);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        th {
+            background: linear-gradient(135deg, #9b59b6, #e74c3c);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        tr:hover {
+            background: #f1f1f1;
+            transition: background 0.3s ease;
+        }
+
+        .verify-btn {
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+            cursor: pointer;
+            min-width: 100px;
+            justify-content: center;
+        }
+
+        .verify-btn.verified {
+            background: linear-gradient(135deg, #00b894, #55efc4);
+            color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 184, 148, 0.3);
+        }
+
+        .verify-btn.unverified {
+            background: linear-gradient(135deg, #636e72, #b2bec3);
+            color: #fff;
+            box-shadow: 0 2px 5px rgba(99, 110, 114, 0.3);
+        }
+
+        .verify-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            filter: brightness(1.1);
+        }
+
+        .verify-btn.verified:hover {
+            background: linear-gradient(135deg, #00a081, #4adfb3);
+        }
+
+        .verify-btn.unverified:hover {
+            background: linear-gradient(135deg, #576067, #a3b1b8);
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 20px;
+            background: rgba(39, 174, 96, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 20px;
+            background: rgba(231, 76, 60, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            th, td {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+            .verify-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+                min-width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Verify Payments</h1>
+
+        <a href="{% url 'club_dashboard' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'success' %}
+                    <div class="success-message">{{ message }}</div>
+                {% else %}
+                    <div class="error-message">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if registrations %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student/Group Leader</th>
+                        <th>Event</th>
+                        <th>Group Name</th>
+                        <th>UTR</th>
+                        <th>Transaction Date</th>
+                        <th>Transaction Time</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registration in registrations %}
+                        <tr>
+                            <td>
+                                {% if registration.event.is_group_event %}
+                                    {{ registration.student.name }} (Leader)
+                                {% else %}
+                                    {{ registration.student.name }}
+                                {% endif %}
+                            </td>
+                            <td>{{ registration.event.name }}</td>
+                            <td>{{ registration.group_name|default:'N/A' }}</td>
+                            <td>{{ registration.utr|default:'N/A' }}</td>
+                            <td>{{ registration.transaction_date|date:'Y-m-d'|default:'N/A' }}</td>
+                            <td>{{ registration.transaction_time|time:'H:i'|default:'N/A' }}</td>
+                            <td>{{ registration.event.price|default:'0.00' }} INR</td>
+                            <td>{{ registration.payment_verified|yesno:'Verified,Unverified' }}</td>
+                            <td>
+                                <form action="{% url 'verify_payment' registration.id %}" method="POST" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="verify-btn {% if registration.payment_verified %}verified{% else %}unverified{% endif %}">
+                                        <i class="fas {% if registration.payment_verified %}fa-check-circle{% else %}fa-circle-check{% endif %}"></i>
+                                        {% if registration.payment_verified %}Unverify{% else %}Verify{% endif %}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="error-message">No paid event registrations found.</div>
+        {% endif %}
+    </div>
+</body>
+</html>

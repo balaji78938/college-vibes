@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload and Preview Student Data</title>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #2193B0, #6DD5ED);
+            min-height: 100vh;
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            position: relative;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 80px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
+            animation: fadeIn 0.8s ease-in-out;
+            max-width: 1500px;
+            width: 99%;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h3 {
+            color: #1e3c72;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        #drop-zone {
+            width: 100%;
+            height: 200px;
+            border: 3px dashed #6DD5ED;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #2193B0;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        #drop-zone.dragging {
+            background: #e6f7ff;
+            border-color: #2193B0;
+            color: #1e3c72;
+            transform: scale(1.02);
+        }
+
+        #drop-zone:hover {
+            background: #f0faff;
+            border-color: #2193B0;
+        }
+
+        .btn-primary, .btn-success, .back-btn {
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FF7E5F, #FD3A84);
+            border: none;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #FD3A84, #FF7E5F);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(253, 58, 132, 0.4);
+            color: white;
+        }
+
+        .btn-primary:disabled {
+            background: linear-gradient(135deg, #ff9d7f, #ff6ca1);
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-primary:disabled:hover {
+            background: linear-gradient(135deg, #ff6ca1, #ff9d7f);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(253, 58, 132, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #71dd8a);
+            border: none;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #71dd8a, #28a745);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 0 6px 20px rgba(46, 83, 152, 0.5);
+            color: white;
+        }
+
+        .table {
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th {
+            background: #1e3c72;
+            color: white;
+            font-weight: 700;
+            text-align: center;
+            padding: 18px;
+            font-size: 1.1rem;
+            white-space: nowrap;
+        }
+
+        .table td {
+            vertical-align: middle;
+            padding: 12px;
+            font-weight: 600;
+        }
+
+        .table input.form-control {
+            border-radius: 8px;
+            border: 1px solid #6DD5ED;
+            padding: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .table input.form-control:focus {
+            border-color: #2193B0;
+            box-shadow: 0 0 5px rgba(33, 147, 176, 0.5);
+        }
+
+        /* Column width adjustments */
+        .table th:nth-child(1), .table td:nth-child(1) { /* Roll No */
+            width: 15%; /* For 10-12 characters */
+        }
+        .table th:nth-child(2), .table td:nth-child(2) { /* Name */
+            width: 24%; /* Slightly reduced to balance with increased Email width */
+        }
+        .table th:nth-child(3), .table td:nth-child(3) { /* Branch */
+            width: 10%;
+        }
+        .table th:nth-child(4), .table td:nth-child(4) { /* Password */
+            width: 12%; /* For 9 characters */
+        }
+        .table th:nth-child(5), .table td:nth-child(5) { /* Contact */
+            width: 12%; /* Slightly decreased for better balance */
+        }
+        .table th:nth-child(6), .table td:nth-child(6) { /* College */
+            width: 12%; /* Reduced to balance with increased Email width */
+        }
+        .table th:nth-child(7), .table td:nth-child(7) { /* Email */
+            width: 35%; /* Increased from 32% to accommodate longer Gmail addresses */
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+            .container {
+                padding: 30px;
+                margin-bottom: 30px;
+                width: 98%;
+            }
+            #drop-zone {
+                height: 150px;
+                font-size: 1rem;
+            }
+            .back-btn {
+                top: 15px;
+                left: 15px;
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+            .table th {
+                padding: 12px;
+                font-size: 1rem;
+            }
+            .table td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            .table input.form-control {
+                padding: 8px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding-top: 60px;
+            }
+            .container {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            #drop-zone {
+                height: 120px;
+                font-size: 0.9rem;
+            }
+            .table {
+                font-size: 0.8rem;
+            }
+            .table th {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            .table td {
+                padding: 8px;
+                font-size: 0.8rem;
+            }
+            .table input.form-control {
+                padding: 6px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Back to Dashboard Button -->
+    <a href="{% url 'master_dashboard' %}" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+
+    <div class="container">
+        <!-- Drag-and-drop file upload -->
+        <div id="drop-zone">
+            Drag and drop a CSV or Excel file here or click to select
+        </div>
+        <input type="file" id="fileInput" class="d-none" accept=".csv, .xlsx, .xls">
+        
+        <form method="post" enctype="multipart/form-data" id="uploadForm" class="mt-3">
+            {% csrf_token %}
+            <input type="hidden" name="file" id="fileHidden">
+            <button type="button" class="btn btn-primary" id="uploadButton" onclick="document.getElementById('fileInput').click();">Upload File</button>
+        </form>
+
+        <!-- Table for displaying data and creating accounts -->
+        <div id="table-container" class="d-none">
+            <h3>Preview Student Data</h3>
+            <form method="post" action="{% url 'create_students' %}" id="createForm">
+                {% csrf_token %}
+                <table id="students-table" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Roll No</th>
+                            <th>Name</th>
+                            <th>Branch</th>
+                            <th>Password</th>
+                            <th>Contact</th>
+                            <th>College</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-table-body">
+                        <!-- Rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+                <button type="submit" class="btn btn-success">Create Accounts</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('fileInput');
+        const tableContainer = document.getElementById('table-container');
+        const uploadButton = document.getElementById('uploadButton');
+        const studentsTableBody = document.getElementById('students-table-body');
+
+        // Function to generate random 8-digit password
+        function generateRandomPassword() {
+            return Math.floor(10000000 + Math.random() * 90000000).toString();
+        }
+
+        // Handle file drag-and-drop
+        dropZone.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropZone.classList.add('dragging');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragging');
+        });
+
+        dropZone.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropZone.classList.remove('dragging');
+            const file = event.dataTransfer.files[0];
+            handleFile(file);
+        });
+
+        // Trigger file input when the drop zone is clicked
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Handle file selection from file input
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            handleFile(file);
+        });
+
+        function handleFile(file) {
+            if (!file) return;
+
+            const extension = file.name.split('.').pop().toLowerCase();
+            const reader = new FileReader();
+
+            if (extension === 'csv') {
+                reader.onload = function (e) {
+                    const data = e.target.result;
+                    parseCSV(data);
+                };
+                reader.readAsText(file);
+            } else if (['xls', 'xlsx'].includes(extension)) {
+                reader.onload = function (e) {
+                    const data = new Uint8Array(e.target.result);
+                    parseExcel(data);
+                };
+                reader.readAsArrayBuffer(file);
+            } else {
+                alert('Please upload a valid CSV or Excel file.');
+            }
+        }
+
+        // Parse CSV file
+        function parseCSV(data) {
+            const rows = data.split('\n').map(row => row.split(',').map(cell => cell.trim()));
+            populateTable(rows);
+        }
+
+        // Parse Excel file using SheetJS
+        function parseExcel(data) {
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+            populateTable(rows);
+        }
+
+        // Populate table with data
+        function populateTable(rows) {
+            studentsTableBody.innerHTML = ''; // Clear existing rows
+            rows.forEach((row, index) => {
+                if (index === 0) return; // Skip header row
+                if (row.length < 6) return; // Ensure row has enough columns (excluding password)
+
+                const tr = document.createElement('tr');
+                const columns = [
+                    row[0] || '', // Roll No
+                    row[1] || '', // Name
+                    row[2] || '', // Branch
+                    generateRandomPassword(), // Password
+                    row[3] || '', // Contact
+                    row[4] || '', // College
+                    row[5] || ''  // Email
+                ];
+
+                columns.forEach((cell, idx) => {
+                    const td = document.createElement('td');
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.name = `students_data[${index-1}][${idx}]`; // Name for form submission
+                    input.value = cell;
+                    input.classList.add('form-control');
+                    td.appendChild(input);
+                    tr.appendChild(td);
+                });
+                studentsTableBody.appendChild(tr);
+            });
+
+            if (rows.length > 1) {
+                tableContainer.classList.remove('d-none');
+                dropZone.classList.add('d-none');
+                uploadButton.classList.add('d-none');
+            }
+        }
+    </script>
+</body>
+</html>

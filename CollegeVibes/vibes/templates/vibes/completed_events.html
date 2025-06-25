@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Completed Events</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #6DD5ED);
+            min-height: 100vh;
+            margin: 0;
+            padding: 30px;
+            overflow-y: auto;
+            color: white;
+            font-size: 16px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+            animation: pulse 10s infinite;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.2; }
+            50% { transform: scale(1.2); opacity: 0.4; }
+            100% { transform: scale(1); opacity: 0.2; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.97);
+            color: #333;
+            padding: 40px;
+            border-radius: 25px;
+            max-width: 1600px;
+            margin: 0 auto;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            position: relative;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #e67e22, #f1c40f);
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, #d35400, #f39c12);
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 8px 18px rgba(230, 126, 34, 0.5);
+            color: white;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 35px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-align: center;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-responsive {
+            border-radius: 20px;
+            overflow-x: auto;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            background: #fff;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            table-layout: auto;
+            margin-bottom: 0;
+        }
+
+        .table th {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 15px 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            white-space: nowrap;
+        }
+
+        .table td {
+            font-size: 1rem;
+            padding: 15px 20px;
+            vertical-align: middle;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tr:nth-child(even) td {
+            background: rgba(245, 245, 245, 0.95);
+        }
+
+        .table tr:hover td {
+            background: rgba(220, 240, 255, 0.95);
+            transition: background 0.3s ease;
+        }
+
+        .event-img {
+            width: 120px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .event-img:hover {
+            transform: scale(1.05);
+        }
+
+        .price-text {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        @media (max-width: 1200px) {
+            .container { max-width: 100%; padding: 30px; }
+            .table th, .table td { padding: 12px 15px; }
+            .event-img { width: 100px; }
+        }
+
+        @media (max-width: 992px) {
+            h2 { font-size: 2rem; }
+            .table th { font-size: 1rem; }
+            .table td { font-size: 0.9rem; }
+            .event-img { width: 80px; }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 20px; }
+            .table th, .table td { padding: 10px; }
+            .event-img { width: 60px; }
+        }
+
+        @media (max-width: 576px) {
+            .container { padding: 15px; }
+            h2 { font-size: 1.5rem; }
+            .table th { font-size: 0.9rem; }
+            .table td { font-size: 0.85rem; }
+            .event-img { width: 50px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'club_dashboard' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <h2>Completed Events</h2>
+        <div class="table-responsive">
+            <table class="table table-hover text-center">
+                <thead>
+                    <tr>
+                        <th>Poster</th>
+                        <th>Event Name</th>
+                        <th>Date</th>
+                        <th>Venue</th>
+                        <th>Registration Deadline</th>
+                        <th>Price</th>
+                        <th>QR Code</th>
+                        <th>Group Participation</th>
+                        <th>Branch Restriction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                    <tr>
+                        <td>
+                            {% if event.poster %}
+                                <img src="{{ event.poster.url }}" alt="Event Poster" class="event-img">
+                            {% else %}
+                                <span>No Poster</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ event.name }}</td>
+                        <td>{{ event.date|date:"Y-m-d" }}</td>
+                        <td>{{ event.venue }}</td>
+                        <td>{{ event.registration_deadline|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            {% if event.price %}
+                                <span class="price-text">₹{{ event.price }}</span>
+                            {% else %}
+                                Free
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if event.qr_code %}
+                                <img src="{{ event.qr_code.url }}" alt="QR Code" class="event-img">
+                            {% else %}
+                                <span>No QR Code</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if event.is_group_event %}
+                                Group ({{ event.min_members }}-{{ event.max_members }} members)
+                            {% else %}
+                                Individual
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if event.same_branch_required %}
+                                Same Branch
+                            {% else %}
+                                Any Branch
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9">No completed events found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!-- templates/generate_certificates.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Certificates</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        .form-group { margin-bottom: 20px; }
+        select, button { padding: 10px; font-size: 16px; }
+        button { background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        .message { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h2>Generate Certificates for Completed Events</h2>
+    <form method="post" action="">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="event_id">Select Event:</label>
+            <select name="event_id" id="event_id" required>
+                <option value="">-- Select an Event --</option>
+                {% for event in completed_events %}
+                    <option value="{{ event.id }}">{{ event.name }} ({{ event.date|date:"F d, Y" }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit">Generate and Send Certificates</button>
+    </form>
+    {% if messages %}
+        {% for message in messages %}
+            <p class="message {{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

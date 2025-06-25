@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Event Registration - {{ event.name }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e0f7fa, #f3e8ff);
+            color: #1f2937;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            color: #ffffff;
+            padding: 15px 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .welcome-message .name {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-bar .nav-link {
+            color: #ffffff;
+            font-weight: 600;
+            padding: 8px 15px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .menu-bar .nav-link:hover,
+        .menu-bar .nav-link.active {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+        }
+
+        .container-main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .poster-section {
+            flex: 1;
+            max-width: 40%;
+        }
+
+        .poster-section img {
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .poster-section img:hover {
+            transform: scale(1.02);
+        }
+
+        .event-details {
+            margin-top: 15px;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .event-details p {
+            margin: 5px 0;
+            font-size: 0.95rem;
+            color: #6b7280;
+        }
+
+        .event-details p strong {
+            color: #4b5563;
+            font-weight: 700;
+        }
+
+        .form-section {
+            flex: 1;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        h2 {
+            color: #1f2937;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .form-field {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f9fafb;
+            border-radius: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .form-field:hover {
+            background: #eef2ff;
+        }
+
+        .form-field label {
+            font-weight: 600;
+            color: #4b5563;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .form-field label i {
+            margin-right: 10px;
+            color: #8b5cf6;
+        }
+
+        .form-control {
+            font-size: 1rem;
+            color: #6b7280;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            background: #ffffff;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+            width: 100%;
+        }
+
+        .form-control:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(139, 92, 246, 0.5);
+        }
+
+        .form-field .form-control:required {
+            border-left: 4px solid #ef4444;
+        }
+
+        .form-field .form-control:required:focus {
+            border-left: 4px solid #8b5cf6;
+        }
+
+        .form-field #utr {
+            letter-spacing: 1px;
+            font-family: monospace;
+        }
+
+        .form-field img.qr-code {
+            width: 100%;
+            max-width: 200px;
+            border-radius: 8px;
+            margin-top: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-custom {
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: #8b5cf6;
+            color: #ffffff;
+            width: 100%;
+            max-width: 200px;
+            margin: 25px auto 0;
+            display: block;
+        }
+
+        .btn-custom:hover:not(:disabled) {
+            background: #7c3aed;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-custom:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .text-danger {
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+            background: #fee2e2;
+            color: #e11d48;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Message styles */
+        .message {
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.success {
+            color: #10b981;
+            background: #d1fae5;
+        }
+
+        .message.pending {
+            color: #d97706;
+            background: #fef3c7;
+        }
+
+        .message.error {
+            color: #e11d48;
+            background: #fee2e2;
+        }
+
+        .message i {
+            margin-right: 5px;
+        }
+
+        /* Toggle Menu Styles */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+        }
+
+        .menu-bar {
+            display: flex;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .container-main { flex-direction: column; }
+            .poster-section { max-width: 100%; }
+            .header { padding: 10px 15px; }
+            .container-fluid {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .welcome-container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+            }
+            .welcome-message .name { font-size: 1.5rem; }
+            .hamburger { display: block; }
+            .menu-bar {
+                display: none;
+                width: 100%;
+                margin-top: 10px;
+            }
+            .menu-bar.active {
+                display: block;
+            }
+            .menu-bar .nav {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .menu-bar .nav-link { 
+                padding: 6px 10px; 
+                font-size: 0.8rem; 
+                justify-content: flex-start;
+            }
+            h2 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <div class="welcome-container">
+                <div class="welcome-message">
+                    <span class="name">Welcome, {{ student.name }}</span>
+                </div>
+                <button class="hamburger" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <nav class="menu-bar">
+                <ul class="nav">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'student_dashboard' %}"><i class="fas fa-calendar-alt"></i> Explore Events</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'registered_events' %}"><i class="fas fa-check-circle"></i> Registered Events</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'notifications' %}"><i class="fas fa-bell"></i> Notifications</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'myprofile' %}"><i class="fas fa-user"></i> My Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container-main">
+        <!-- Poster and Event Details Section -->
+        <div class="poster-section">
+            {% if event.poster %}
+                <img src="{{ event.poster.url }}" alt="{{ event.name }} Poster">
+            {% else %}
+                <img src="https://via.placeholder.com/400x500?text={{ event.name }}+Poster" alt="Default Poster">
+            {% endif %}
+            <div class="event-details">
+                <p><strong>Event Name:</strong> {{ event.name }}</p>
+                <p><strong>Minimum Members:</strong> {{ event.min_members }}</p>
+                <p><strong>Maximum Members:</strong> {{ event.max_members }}</p>
+                <p><strong>Price:</strong> {% if event.price %}₹{{ event.price }}{% else %}Free{% endif %}</p>
+                {% if event.same_branch_required %}
+                    <p class="text-danger"><strong>Note:</strong> All teammates must be from the same branch.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2>Group Event Registration</h2>
+            <form id="groupRegistrationForm">
+                <input type="hidden" id="eventId" value="{{ event.id }}">
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                <p class="text-danger" id="errorMessage" style="display: none;"></p> <!-- Error message at top -->
+                <div class="form-field">
+                    <label><i class="fas fa-users"></i> Group Name</label>
+                    <input type="text" class="form-control" id="groupName" placeholder="Enter Group Name" required>
+                </div>
+
+                <div class="form-field">
+                    <label><i class="fas fa-user-shield"></i> Leader</label>
+                    <input type="text" class="form-control" id="leader" placeholder="{{ student.roll_no }}" value="{{ student.roll_no }}" readonly>
+                </div>
+
+                <div id="teammateFields">
+                    {% for i in "x"|rjust:event.max_members|slice:"1:" %}
+                    <div class="form-field">
+                        <label><i class="fas fa-user"></i> Student {{ forloop.counter }}</label>
+                        <input type="text" class="form-control teammate" placeholder="Enter Roll Number">
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if event.price %}
+                <div class="form-field">
+                    <label><i class="fas fa-qrcode"></i> QR Code for Payment</label>
+                    {% if event.qr_code %}
+                        <img src="{{ event.qr_code.url }}" alt="Event QR Code" class="qr-code">
+                    {% else %}
+                        <p>No QR code available</p>
+                    {% endif %}
+                </div>
+                <div class="form-field">
+                    <label><i class="fas fa-receipt"></i> UTR Number</label>
+                    <input type="text" class="form-control" id="utr" placeholder="Enter UTR Number (12 digits)" maxlength="12" required>
+                </div>
+                <div class="form-field">
+                    <label><i class="fas fa-calendar-day"></i> Transaction Date</label>
+                    <input type="date" class="form-control" id="transactionDate" required>
+                </div>
+                <div class="form-field">
+                    <label><i class="fas fa-clock"></i> Transaction Time</label>
+                    <input type="time" class="form-control" id="transactionTime" required>
+                </div>
+                {% endif %}
+
+                <button type="button" class="btn-custom" id="submitGroupRegistration">Register</button>
+                <!-- Success/Pending message display area -->
+                <div id="registrationMessage" class="message"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Hidden element to pass data to JavaScript -->
+    <div id="eventData" 
+         data-min-members="{{ event.min_members }}" 
+         data-max-members="{{ event.max_members }}" 
+         data-has-price="{% if event.price %}true{% else %}false{% endif %}" 
+         data-redirect-url="{% url 'student_dashboard' %}" 
+         style="display: none;"></div>
+
+    <!-- JavaScript for form submission and message handling -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Toggle Menu Functionality
+            const hamburger = document.querySelector('.hamburger');
+            const menuBar = document.querySelector('.menu-bar');
+
+            hamburger.addEventListener('click', () => {
+                menuBar.classList.toggle('active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!hamburger.contains(e.target) && !menuBar.contains(e.target)) {
+                    menuBar.classList.remove('active');
+                }
+            });
+
+            // Existing Form Submission Logic
+            const form = document.getElementById('groupRegistrationForm');
+            const submitBtn = document.getElementById('submitGroupRegistration');
+            const errorMessageDiv = document.getElementById('errorMessage');
+            const registrationMessageDiv = document.getElementById('registrationMessage');
+            const eventData = document.getElementById('eventData');
+            const minMembers = parseInt(eventData.dataset.minMembers);
+            const maxMembers = parseInt(eventData.dataset.maxMembers);
+            const hasPrice = eventData.dataset.hasPrice === 'true';
+            const redirectUrl = eventData.dataset.redirectUrl;
+
+            submitBtn.addEventListener('click', () => {
+                const groupName = document.getElementById('groupName').value.trim();
+                const leader = document.getElementById('leader').value.trim();
+                const teammates = Array.from(document.querySelectorAll('.teammate'))
+                    .map(input => input.value.trim())
+                    .filter(value => value !== '');
+                const utr = hasPrice ? document.getElementById('utr')?.value.trim() : '';
+                const transactionDate = hasPrice ? document.getElementById('transactionDate')?.value : '';
+                const transactionTime = hasPrice ? document.getElementById('transactionTime')?.value : '';
+
+                // Client-side validation
+                if (!groupName) {
+                    showError('Please enter a group name.');
+                    return;
+                }
+
+                const totalMembers = teammates.length + 1; // Including leader
+                if (totalMembers < minMembers || totalMembers > maxMembers) {
+                    showError(`Group size must be between ${minMembers} and ${maxMembers} members.`);
+                    return;
+                }
+
+                if (hasPrice) {
+                    if (!utr || utr.length !== 12 || !/^\d{12}$/.test(utr)) {
+                        showError('Please enter a valid 12-digit UTR number.');
+                        return;
+                    }
+                    if (!transactionDate) {
+                        showError('Please enter the transaction date.');
+                        return;
+                    }
+                    if (!transactionTime) {
+                        showError('Please enter the transaction time.');
+                        return;
+                    }
+                }
+
+                // Prepare form data
+                const formData = new FormData();
+                formData.append('event_id', document.getElementById('eventId').value);
+                formData.append('group_name', groupName);
+                formData.append('teammates', JSON.stringify(teammates));
+                if (hasPrice) {
+                    formData.append('utr', utr);
+                    formData.append('transaction_date', transactionDate);
+                    formData.append('transaction_time', transactionTime);
+                }
+                formData.append('csrfmiddlewaretoken', document.querySelector('input[name="csrfmiddlewaretoken"]').value);
+
+                // Submit form
+                fetch("{% url 'register_group_event' event.id %}", {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    // Check if response is OK (status 200-299) or an error status like 400
+                    return response.json().then(data => ({ status: response.status, data }));
+                })
+                .then(({ status, data }) => {
+                    if (status >= 200 && status < 300) {
+                        // Success cases
+                        if (data.status === 'pending') {
+                            const now = new Date();
+                            const hours = now.getHours();
+                            const minutes = now.getMinutes();
+                            const isBefore4PM = hours < 16 || (hours === 16 && minutes === 0);
+                            const verificationMessage = isBefore4PM
+                                ? "Payment will be verified by evening 6 or 7 PM."
+                                : "Payment will be verified by morning 9 AM tomorrow.";
+                            showMessage('pending', `<i class="fas fa-hourglass-half"></i> ${data.message} ${verificationMessage}`);
+                            // Update button text and disable
+                            submitBtn.textContent = 'Payment Verification Pending';
+                            submitBtn.disabled = true;
+                        } else if (data.status === 'success') {
+                            showMessage('success', `<i class="fas fa-check"></i> ${data.message}`);
+                            // Update button text and disable
+                            submitBtn.textContent = 'Registered';
+                            submitBtn.disabled = true;
+                            setTimeout(() => window.location.href = redirectUrl, 2000);
+                        }
+                    } else {
+                        // Error cases (e.g., 400 Bad Request)
+                        if (data.error) {
+                            showError(data.error); // Display the specific error from views.py
+                        } else {
+                            showError('An unexpected error occurred.');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    showError('A network error occurred while registering. Please try again.');
+                });
+            });
+
+            function showError(text) {
+                errorMessageDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${text}`;
+                errorMessageDiv.style.display = 'block';
+                setTimeout(() => {
+                    errorMessageDiv.style.display = 'none';
+                }, 5000);
+            }
+
+            function showMessage(type, text) {
+                registrationMessageDiv.className = `message ${type}`;
+                registrationMessageDiv.innerHTML = text;
+                registrationMessageDiv.style.display = 'block';
+                setTimeout(() => {
+                    registrationMessageDiv.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>

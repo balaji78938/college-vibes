@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registered Events - College Vibes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e9d8ff, #c8f5e1);
+            color: #1f2937;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #7c3aed, #06b6d4);
+            color: #ffffff;
+            padding: 20px 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .welcome-message .name {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+        }
+
+        .menu-bar .nav-link {
+            color: #ffffff;
+            font-weight: 600;
+            padding: 12px 25px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+            gap: 10px;
+            border-radius: 8px;
+        }
+
+        .menu-bar .nav-link:hover,
+        .menu-bar .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        h3 {
+            color: #1f2937;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 50px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .registered-events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            padding: 20px 0;
+        }
+
+        .event-card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .event-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .event-poster {
+            width: 350px;
+            height: 450px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid #e9ecef;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .event-poster:hover {
+            transform: scale(1.05);
+        }
+
+        .event-details {
+            flex: 1;
+            padding: 8px 0;
+        }
+
+        .event-details h4 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .event-meta p {
+            font-size: 1.2rem;
+            color: #4b5563;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .event-description {
+            font-size: 1rem;
+            color: #6b7280;
+            margin: 15px 0;
+            line-height: 1.8;
+            max-height: 80px;
+            overflow-y: auto;
+        }
+
+        .btn-custom {
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-danger {
+            background: linear-gradient(90deg, #e11d48, #f43f5e);
+            color: #ffffff;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(90deg, #be123c, #dc2626);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(225, 29, 72, 0.3);
+        }
+
+        .leader-notice {
+            background: linear-gradient(90deg, #fee2e2, #fef2f2);
+            color: #991b1b;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 15px;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(153, 27, 27, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .leader-notice:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(153, 27, 27, 0.2);
+        }
+
+        .no-events {
+            font-size: 1.2rem;
+            color: #6b7280;
+            text-align: center;
+            padding: 25px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .modal-content {
+            background: transparent;
+            border: none;
+        }
+
+        .modal-body {
+            padding: 0;
+            text-align: center;
+        }
+
+        .modal-body img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .verification-status {
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 8px 18px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .verification-status.verified {
+            color: #10b981;
+            background: #d1fae5;
+        }
+
+        .verification-status.pending {
+            color: #d97706;
+            background: #fef3c7;
+        }
+
+        /* Message Styling */
+        .messages {
+            margin-bottom: 30px;
+        }
+
+        .messages .alert {
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .messages .alert-success {
+            background: linear-gradient(90deg, #d1fae5, #a7f3d0);
+            color: #10b981;
+        }
+
+        .messages .alert-danger {
+            background: linear-gradient(90deg, #fee2e2, #fef2f2);
+            color: #e11d48;
+        }
+
+        .messages .alert i {
+            font-size: 1.2rem;
+        }
+
+        /* Toggle Menu Styles */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+        }
+
+        .menu-bar {
+            display: flex;
+            align-items: center;
+        }
+
+        @media (max-width: 1024px) {
+            .event-card { flex-direction: column; align-items: flex-start; }
+            .event-poster { width: 100%; max-width: 400px; height: 250px; margin-bottom: 20px; }
+            .event-details h4 { font-size: 1.6rem; }
+            .event-meta p { font-size: 1.1rem; }
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 15px 20px; }
+            .container-fluid {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .welcome-container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+            }
+            .welcome-message .name { font-size: 1.8rem; }
+            .hamburger { display: block; }
+            .menu-bar {
+                display: none;
+                width: 100%;
+                margin-top: 10px;
+            }
+            .menu-bar.active {
+                display: block;
+            }
+            .menu-bar .nav {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .menu-bar .nav-link {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+                justify-content: flex-start;
+                gap: 8px;
+            }
+            .event-poster { height: 220px; }
+            .container { margin: 40px auto; }
+            h3 { font-size: 2.4rem; }
+            .messages .alert { font-size: 0.95rem; }
+        }
+
+        @media (max-width: 480px) {
+            .header { padding: 12px 15px; }
+            .welcome-message .name { font-size: 1.6rem; }
+            h3 { font-size: 2rem; }
+            .menu-bar .nav-link { padding: 8px 15px; font-size: 0.85rem; gap: 6px; }
+            .hamburger { font-size: 1.2rem; }
+            .event-card { padding: 20px; }
+            .event-poster { height: 180px; }
+            .event-details h4 { font-size: 1.4rem; }
+            .event-meta p { font-size: 1rem; }
+            .event-description { font-size: 0.9rem; }
+            .btn-custom { padding: 10px 20px; font-size: 0.9rem; }
+            .leader-notice { font-size: 0.9rem; padding: 8px 12px; }
+            .verification-status { font-size: 0.9rem; padding: 6px 12px; }
+            .messages .alert { font-size: 0.9rem; padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <div class="welcome-container">
+                <div class="welcome-message">
+                    <span class="name">Welcome, {{ student.name }}</span>
+                </div>
+                <button class="hamburger" aria-label="Toggle Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <nav class="menu-bar">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'student_dashboard' %}">
+                            <i class="fas fa-calendar-alt"></i> Explore Events
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'registered_events' %}">
+                            <i class="fas fa-check-circle"></i> Registered Events
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'notifications' %}">
+                            <i class="fas fa-bell"></i> Notifications
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'myprofile' %}">
+                            <i class="fas fa-user"></i> My Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h3>Registered Events</h3>
+        <!-- Messages Display -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}" role="alert">
+                <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="registered-events-list">
+            {% for reg in registered_events %}
+            <div class="event-card">
+                {% if reg.event.poster %}
+                    <img loading="lazy" src="{{ reg.event.poster.url }}" alt="{{ reg.event.name }}" class="event-poster"
+                         onclick="showPoster('{{ reg.event.poster.url }}')">
+                {% endif %}
+                <div class="event-details">
+                    <h4>{{ reg.event.name }}</h4>
+                    <div class="event-meta">
+                        <p><strong>Date:</strong> {{ reg.event.date }}</p>
+                        <p><strong>Time:</strong> {{ reg.event.time|time:'h:i A' }}</p>
+                        <p><strong>Venue:</strong> {{ reg.event.venue }}</p>
+                        {% if reg.event.is_group_event %}
+                            <p><strong>Group Name:</strong> {{ reg.group_name }}</p>
+                            <p><strong>Role:</strong> {{ reg.is_leader|yesno:"Leader,Member" }}</p>
+                        {% endif %}
+                        {% if reg.event.price is not None and reg.event.price > 0 %}
+                            <p><strong>Price:</strong> ₹{{ reg.event.price }}</p>
+                            <p><strong>UTR:</strong> {{ reg.utr|default:"Not provided" }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="event-description">
+                        <p>{{ reg.event.description }}</p>
+                    </div>
+                    {% if reg.event.price is not None and reg.event.price > 0 and not reg.payment_verified %}
+                        <span class="verification-status pending">
+                            <i class="fas fa-hourglass-half"></i> Payment Verification Pending
+                        </span>
+                    {% endif %}
+                    {% if reg.event.is_group_event %}
+                    {% if reg.is_leader %}
+                        <a href="{% url 'unregister_event' reg.event.id %}" 
+                        class="btn-custom btn-danger" 
+                        onclick="return confirmUnregister(this.href, true);">
+                            Unregister Group
+                        </a>
+                    {% else %}
+                        <span class="leader-notice">Only leaders can unregister</span>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'unregister_event' reg.event.id %}" 
+                    class="btn-custom btn-danger" 
+                    onclick="return confirmUnregister(this.href, false);">
+                        Unregister
+                    </a>
+                {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <p class="no-events">You haven’t registered for any events yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="modal fade" id="posterModal" tabindex="-1" aria-labelledby="posterModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img id="enlargedPoster" src="" alt="Enlarged Image" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Toggle Menu Functionality
+            const hamburger = document.querySelector('.hamburger');
+            const menuBar = document.querySelector('.menu-bar');
+
+            hamburger.addEventListener('click', () => {
+                menuBar.classList.toggle('active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!hamburger.contains(e.target) && !menuBar.contains(e.target)) {
+                    menuBar.classList.remove('active');
+                }
+            });
+
+            // Auto-dismiss messages after 5 seconds
+            const alerts = document.querySelectorAll('.messages .alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 500);
+                }, 5000);
+            });
+        });
+
+        function showPoster(imageUrl) {
+            const enlargedPoster = document.getElementById('enlargedPoster');
+            enlargedPoster.src = imageUrl;
+            const posterModal = new bootstrap.Modal(document.getElementById('posterModal'));
+            posterModal.show();
+        }
+
+        function confirmUnregister(url, isGroup) {
+            const message = isGroup 
+                ? 'Are you sure you want to unregister the entire group? This will remove all group members.'
+                : 'Are you sure you want to unregister from this event?';
+            if (confirm(message)) {
+                window.location.href = url;
+            }
+        }
+    </script>
+</body>
+</html>

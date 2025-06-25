@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Club</title>
+</head>
+<body>
+    <h2>Are you sure you want to delete {{ club.name }}?</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+    </form>
+    <a href="{% url 'master_dashboard' %}">Cancel</a>
+</body>
+</html>

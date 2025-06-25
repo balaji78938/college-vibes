@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Runner-Up Certificate</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f4f4f4; }
+        .certificate { width: 800px; height: 600px; border: 5px solid #00CED1; background-color: #FFF; text-align: center; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
+        .logo-container { position: absolute; top: 20px; left: 20px; text-align: left; }
+        .logo { width: 200px; }
+        .college-name-container { position: absolute; top: 70px; left: 50%; transform: translateX(-50%); text-align: center; }
+        .college-name { font-size: 32px; color: #4682B4; margin: 0; }
+        .location { font-size: 20px; color: #4682B4; margin-top: 5px; }
+        .header { font-size: 36px; font-weight: bold; color: #2F4F4F; margin-top: 100px; margin-bottom: 20px; } /* Reduced from 150px to 100px */
+        .title { font-size: 30px; font-weight: bold; color: #DAA520; margin: 20px 0; }
+        .recipient { font-size: 28px; font-style: italic; margin: 20px 0; }
+        .description { font-size: 20px; margin: 20px 0; line-height: 1.5; }
+        .date { font-size: 18px; position: absolute; bottom: 30px; right: 50px; }
+    </style>
+</head>
+<body>
+    <div class="certificate">
+        <div class="logo-container">
+            <img src="https://mgit.ac.in/wp-content/uploads/2022/09/logo5-mgit-25-09-2022.png" alt="College Logo" class="logo">
+        </div>
+        <div class="college-name-container">
+            <div class="college-name">Mahatma Gandhi Institute of Technology</div>
+            <div class="location">Gandipet, Telangana</div>
+        </div>
+        <div class="header">Certificate of Achievement</div>
+        <div class="title">Runner-Up</div>
+        <div class="recipient">{{ recipient_name }}</div>
+        <div class="description">
+            This certificate is proudly awarded to {{ recipient_name }} for securing the <b>Runner-Up Position</b> in {{ event_name }} held on {{ event_date|date:"F d, Y" }}.{% if group_name %} Your exceptional effort and skill as part of the group {{ group_name }} are highly appreciated.{% else %} Your exceptional effort and skill are highly appreciated.{% endif %}
+        </div>
+        <div class="date">Date: {{ issue_date|date:"F d, Y" }}</div>
+    </div>
+</body>
+</html>
