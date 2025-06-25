@@ -27,7 +27,7 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 3. Install djano
+### 3. Install django
 
 ```bash
 pip install django
